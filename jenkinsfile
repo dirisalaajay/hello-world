@@ -1,0 +1,13 @@
+node{
+   stage('SCM Checkout'){
+     git 'https://github.com/dirisalaajay/hello-world.git'
+   }
+   stage('Compile-Package'){
+      // Get maven home path
+      def mvnHome =  tool name: 'maven', type: 'maven'   
+      sh "${mvnHome}/bin/mvn package"
+   }
+   stage('Deploy to Tomcat'){
+     deploy adapters: [tomcat8(credentialsId: '90642bbb-2c62-4dd1-a4be-811c0d687bac', path: '', url: 'http://ec2-13-58-64-220.us-east-2.compute.amazonaws.com:8080/')], contextPath: null, onFailure: false, war: '**/*.war'
+    }
+}
